@@ -122,7 +122,37 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        // dd($post);
+        try {
+            DB::beginTransaction();
+            //delete post photos
+            $post->photos()->delete();
+            $photos = DB::table('photoables')->where('photoable_id', $post->id)->delete();
+
+            //delete post videos
+            $post->videos()->delete();
+            $videos = DB::table('videoables')->where('videoable_id', $post->id)->delete();
+
+            $comments = $post->comments;
+            // dd($comments);
+            //delete comment photos
+            foreach ($comments as $comment) {
+                $comment->photos()->delete();
+                $photos = DB::table('photoables')->where('photoable_id', $comment->id)->delete();
+
+                //delete comment videos
+                $comment->videos()->delete();
+                $videos = DB::table('videoables')->where('videoable_id', $comment->id)->delete();
+            }
+
+            $post->delete();
+            DB::commit();
+            return redirect()->route('posts.index')->with('message', 'Post deleted successfully.');
+        } catch (\Exception $ex) {
+            dd($ex);
+            DB::rollBack();
+            return redirect()->back()->with('message', 'Something went wrong.');
+        }
     }
 
     //store comment
