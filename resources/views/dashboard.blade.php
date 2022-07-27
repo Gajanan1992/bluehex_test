@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    Last logged in time : {{ Auth::user()->last_login_at->format('d M Y, H:i:s a') }}
+                    Last logged in time : {{ Auth::user()->last_login_at->format('d M Y, d:i:s a') }}
                 </div>
                 {{-- <div class="p-6 bg-white border-b border-gray-200">
                     dashboard
